@@ -1,0 +1,30 @@
+name: Deploy QA
+
+on:
+  push:
+    branches:
+      - qa
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Prepare QA Files
+        run: | 
+          mkdir -p qa
+          cp index.html qa/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./qa
+          destination_dir: qa
+          keep_files: true

@@ -1,0 +1,30 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Prepare Prod Files
+        run: | 
+          mkdir -p main
+          cp index.html main/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./main
+          destination_dir: main
+          keep_files: true
